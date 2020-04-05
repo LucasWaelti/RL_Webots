@@ -13,9 +13,9 @@ Download [PyTorch's C++ API](https://pytorch.org/). Choose following options:
 - Language: C++
 - CUDA: None
 
-and click on the second link (cxx11 ABI, 87.4M). Extract the zip file wherever you like on your computer. You must edit the file `libraries/networks/vpg_network/build.sh` by modifying its fourth line: 
+and click on the second link (cxx11 ABI, 87.4M). Extract the zip file wherever you like on your computer. You need to edit the `env.sh` script and adapt the path to libtorch: 
 ```bash
-cmake -DCMAKE_PREFIX_PATH=/path/to/libtorch .. # -> Change it to point to your libtorch folder
+export LIBTORCH_PATH=/path/to/libtorch 
 ```
 
 Open up a terminal, go to the project folder and run the following commands to build the project: 
