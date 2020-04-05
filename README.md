@@ -23,3 +23,5 @@ Open up a terminal, go to the project folder and run the following commands to b
 source env.sh
 ./build_project.sh
 ```
+## Documentation
+Please visit the repository's [wiki](https://github.com/LucasWaelti/RL_Webots/wiki) for more details. 
