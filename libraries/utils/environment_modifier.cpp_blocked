@@ -1,0 +1,120 @@
+#include "environment_modifier.hpp"
+
+static std::default_random_engine _generator;
+
+void supervisor_move_robot(int seed, int loc){
+
+    if(seed != 0)
+        _generator.seed(seed);
+
+    // Supervisor - get handle on robot position 
+    WbNodeRef robot_node_ref = wb_supervisor_node_get_from_def("Khepera4_1");
+    WbFieldRef position_field = wb_supervisor_node_get_field(robot_node_ref, "translation");
+    WbFieldRef rotation_field = wb_supervisor_node_get_field(robot_node_ref, "rotation");
+
+    if(loc == 0){
+        double loc[3] = {0.8,0,0.8}; // -0.672,0,-0.718
+        double ori[4] = {0,-1,0,-2.15}; // 0,-1,0,4.09 | 0,1,0,4.71
+
+        wb_supervisor_field_set_sf_vec3f(position_field, loc);
+        wb_supervisor_field_set_sf_rotation(rotation_field,ori);
+    }
+    else if(loc == -1){
+        // Define some locations 
+        std::vector<double*> locations;
+        double loc0[3] = {-0.66,0,-0.68};   // Upper left
+        double loc1[3] = {-0.79,0,0.79};    // Lower left
+        double loc2[3] = {0,0,0};           // Middle
+        double loc3[3] = {0.71,0,0.72};     // In WHite area
+        locations.push_back(loc0);
+        locations.push_back(loc1);
+        locations.push_back(loc2);
+        locations.push_back(loc3);
+
+        // Sample a location
+        std::uniform_int_distribution<> dis(0, locations.size()-1);
+        int ind = dis(_generator);
+
+        // Spawn the robot at chosen location
+        wb_supervisor_field_set_sf_vec3f(position_field, locations[ind]);
+    }
+
+    // Reset the robot's physics
+    wb_supervisor_node_reset_physics(robot_node_ref);
+    wb_supervisor_simulation_reset_physics(); 
+}
+
+void hide_obstacles(float p_all, float p_indiv, bool force_visible){
+
+    std::bernoulli_distribution distribution_all(p_all);
+    int hide_all = distribution_all(_generator);
+
+    std::bernoulli_distribution distribution_indiv(p_indiv);
+
+    for(uint i=0; i<NUM_OBSTACLES; i++){
+        // Supervisor - get handle on obstacles position 
+        std::string def = "OBST_" + std::to_string(i);
+        WbNodeRef obst_node_ref = wb_supervisor_node_get_from_def(def.c_str());
+        WbFieldRef position_field = wb_supervisor_node_get_field(obst_node_ref, "translation");
+
+        double current_loc[3] = {
+            wb_supervisor_field_get_sf_vec3f(position_field)[0], 
+            wb_supervisor_field_get_sf_vec3f(position_field)[1], 
+            wb_supervisor_field_get_sf_vec3f(position_field)[2]
+        };
+
+        int hide = distribution_indiv(_generator);
+
+        if((hide_all || hide) && !force_visible){
+            double new_loc[3] = {current_loc[0], -2, current_loc[2]};
+            wb_supervisor_field_set_sf_vec3f(position_field, new_loc);
+        }else{
+            double new_loc[3] = {current_loc[0], 0, current_loc[2]};
+            wb_supervisor_field_set_sf_vec3f(position_field, new_loc);
+        }
+    }
+}
+
+bool simulation_exploded(){
+    // Supervisor - get handle on robot position 
+    WbNodeRef robot_node_ref = wb_supervisor_node_get_from_def("Khepera4_1");
+    WbFieldRef position_field = wb_supervisor_node_get_field(robot_node_ref, "translation");
+    double y_pose =  wb_supervisor_field_get_sf_vec3f(position_field)[1];
+    return (y_pose > 0.01);
+}
+
+static bool _contact_occured_before = false;
+static int _num_consecutive_contacts = 0;
+const static int _min_contacts_in_a_row = 10; // contact must be detected for N consecutive time steps. 
+
+void _reset_contact_handler(){
+    _contact_occured_before = false;
+    _num_consecutive_contacts = 0;
+}
+
+bool detect_collision(){
+    // Supervisor - get handle on robot position 
+    WbNodeRef robot_node_ref = wb_supervisor_node_get_from_def("Khepera_IV");
+    int num_contact_points = wb_supervisor_node_get_number_of_contact_points(robot_node_ref);
+    if(num_contact_points > 0){
+        if(_contact_occured_before){
+            _num_consecutive_contacts++;
+            if(_num_consecutive_contacts > _min_contacts_in_a_row){
+                _reset_contact_handler();
+                return true;
+            }else
+                return false;
+        }else{
+            _contact_occured_before = true;
+            _num_consecutive_contacts++;
+            return false;
+        }
+    }else{
+        _reset_contact_handler();
+        return false;
+    }
+    //if(num_contact_points > 0)
+    //    std::cout << num_contact_points << std::endl;
+    //return (num_contact_points > 0);
+}
+
