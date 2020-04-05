@@ -1,0 +1,146 @@
+#VRML_SIM R2020a utf8
+WorldInfo {
+  basicTimeStep 8
+  lineScale 0.05
+  contactProperties [
+    ContactProperties {
+      material2 "khepera4 caster wheel"
+      coulombFriction [
+        0.01
+      ]
+    }
+  ]
+}
+Viewpoint {
+  orientation 0.00032259533168366796 0.7031169061809662 0.7110741959702646 3.1422306242127007
+  position 0.032327726197468154 2.6940283690489477 -0.0019851336983633394
+  follow "Khepera_IV"
+  followType "None"
+}
+RectangleArena {
+  floorSize 2 2
+  floorTileSize 4 4
+  floorAppearance Appearance {
+    material Material {
+      diffuseColor 0.2 0.2 0.2
+    }
+  }
+  wallHeight 0.3
+}
+Background {
+  skyColor [
+    0.2 0.2 0.2
+    0 0 0
+    0 0 0
+  ]
+}
+DirectionalLight {
+  ambientIntensity 1
+  direction 0 -1 0
+  intensity 1.5
+}
+DEF K4 Khepera4 {
+  name "Khepera_IV"
+  controller "vpg_controller"
+  controllerArgs "training"
+  supervisor TRUE
+}
+DEF OBST_0 Solid {
+  translation -0.4 0.04955854302621261 -0.3
+  rotation -1.435231588108557e-17 1 -2.118236274989482e-18 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.8 0.72 0.529
+        }
+      }
+      geometry Box {
+        size 0.16 0.16 0.16
+      }
+    }
+  ]
+  boundingObject Box {
+    size 0.15 0.1 0.15
+  }
+}
+DEF OBST_1 Solid {
+  translation 0.35 0.04955854302621261 0.59
+  rotation 0.25163385176495073 0.9678225067882721 -5.028279834967654e-18 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.8 0.72 0.529
+        }
+      }
+      geometry Box {
+        size 0.16 0.16 0.16
+      }
+    }
+  ]
+  name "solid(1)"
+  boundingObject Box {
+    size 0.15 0.1 0.15
+  }
+}
+DEF OBST_2 Solid {
+  translation 0.26 0.04955854302621261 -0.75
+  rotation 2.31139824055369e-15 1 -1.3894918185828773e-15 -0.005936323319313137
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.8 0.72 0.529
+        }
+      }
+      geometry Box {
+        size 0.16 0.16 0.16
+      }
+    }
+  ]
+  name "solid(5)"
+  boundingObject Box {
+    size 0.15 0.1 0.15
+  }
+}
+DEF OBST_3 Solid {
+  translation 0.58 0.0495585430262156 0
+  rotation -7.621102877601795e-10 1 -2.02435756457418e-09 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.8 0.72 0.529
+        }
+      }
+      geometry Box {
+        size 0.16 0.16 0.16
+      }
+    }
+  ]
+  name "solid(2)"
+  boundingObject Box {
+    size 0.15 0.1 0.15
+  }
+}
+DEF OBST_4 Solid {
+  translation -0.75 0.04955854302621261 0.46
+  rotation -2.7321952489371356e-17 1 1.7619336741772742e-17 0
+  children [
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 0.8 0.72 0.529
+        }
+      }
+      geometry Box {
+        size 0.16 0.16 0.16
+      }
+    }
+  ]
+  name "solid(3)"
+  boundingObject Box {
+    size 0.15 0.1 0.15
+  }
+}

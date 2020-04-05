@@ -1,0 +1,134 @@
+#VRML_SIM R2019b utf8
+WorldInfo {
+}
+Viewpoint {
+  orientation 1 0 0 -1.5707996938995747
+  position 0 4 0
+}
+Background {
+  skyColor [
+    0.21 0.19999999999999998 0.19999999999999998
+  ]
+}
+DirectionalLight {
+  ambientIntensity 1
+  direction 0 -1 0
+}
+PointLight {
+  attenuation 0 0 2
+  location 1 0.15 -1
+  castShadows TRUE
+}
+RectangleArena {
+  floorSize 2 2
+  floorAppearance PBRAppearance {
+    baseColor 0.25 0.22 0.19999999999999998
+    roughness 1
+    metalness 0
+    IBLStrength 0.1
+    emissiveIntensity 0.5
+  }
+  wallAppearance PBRAppearance {
+    baseColor 0.19999999999999998 0.19999999999999998 0.19999999999999998
+    roughness 1
+    metalness 0
+    normalMapFactor 0.5
+    emissiveIntensity 2
+  }
+}
+DEF OBSTACLE_1 Solid {
+  translation 0.5 0 0
+  children [
+    DEF OBSTACLE_SHAPE Shape {
+      appearance PBRAppearance {
+        baseColor 0.8274509999999999 0.8431369999999999 0.811765
+        roughness 1
+      }
+      geometry Box {
+        size 0.1 0.2 0.1
+      }
+    }
+  ]
+  boundingObject USE OBSTACLE_SHAPE
+}
+DEF OBSTACLE_2 Solid {
+  translation 0.03 0 -0.5
+  children [
+    USE OBSTACLE_SHAPE
+  ]
+  name "solid(1)"
+  boundingObject USE OBSTACLE_SHAPE
+}
+DEF OBSTACLE_3 Solid {
+  translation -0.38 0 -0.22
+  children [
+    USE OBSTACLE_SHAPE
+  ]
+  name "solid(2)"
+  boundingObject USE OBSTACLE_SHAPE
+}
+DEF OBSTACLE_4 Solid {
+  translation -0.38 0 0.48
+  children [
+    USE OBSTACLE_SHAPE
+  ]
+  name "solid(3)"
+  boundingObject USE OBSTACLE_SHAPE
+}
+DEF PICKING_AREA_1 Transform {
+  translation -0.6 0 0.2
+  children [
+    DEF SHAPE_PICKING_AREA Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 0
+        roughness 1
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.001
+        radius 0.3
+      }
+    }
+  ]
+}
+DEF PICKING_AREA_2 Transform {
+  translation 0.5 0 0.6
+}
+Solid {
+  translation 0.5 0 0.5
+  children [
+    DEF SHAPE_PICKING_AREA Shape {
+      appearance PBRAppearance {
+        baseColor 0 0 0
+        roughness 1
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.001
+        radius 0.3
+      }
+    }
+  ]
+  name "solid(4)"
+  boundingObject USE SHAPE_PICKING_AREA
+}
+DEF DEPOSIT_AREA Transform {
+  translation 1 0 -1
+  children [
+    DEF SHAPE_DEPOSIT_AREA Shape {
+      appearance PBRAppearance {
+        baseColor 0.933333 0.933333 0.9254899999999999
+        roughness 1
+        metalness 0
+      }
+      geometry Cylinder {
+        height 0.001
+        radius 0.6
+      }
+    }
+  ]
+}
+Khepera4plus {
+  name "R1"
+  controller "test_everything"
+}
